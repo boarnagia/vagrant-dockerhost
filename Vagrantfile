@@ -1,9 +1,6 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-# vagrant plugin install vagrant-vbguest
-# http://kvz.io/blog/2013/01/16/vagrant-tip-keep-virtualbox-guest-additions-in-sync/
-
 # All Vagrant configuration is done below. The "2" in Vagrant.configure
 # configures the configuration version (we support older styles for
 # backwards compatibility). Please don't change it unless you know what
@@ -21,16 +18,10 @@ Vagrant.configure("2") do |config|
 
     config.ssh.insert_key = false
 
-    # vagrant upした後に表示するメッセージを指定する。これはユーザが見ることが
-    # 出来、開発環境の様々なコンポーネントにどのようにアクセスするかなどの指示
-    # を含ませるなどに有用である。
-    # config.vm.post_up_message
-
     # Create a public network, which generally matched to bridged network.
     # Bridged networks make the machine appear as another physical device on
     # your network.
     # config.vm.network "public_network"
-
 
     config.vm.provider "virtualbox" do |vb|
         vb.memory = "2048"
@@ -65,10 +56,10 @@ Vagrant.configure("2") do |config|
 
         timedatectl set-timezone Asia/Tokyo
 
-        if [ ! -d $ddir ];
+        if [ ! -d /docker-volumes ];
         then
-            mkdir $ddir
-            chown vagrant:docker $ddir
+            mkdir /docker-volumes
+            chown vagrant:docker /docker-volumes
         fi
     SHELL
 end
