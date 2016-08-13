@@ -7,7 +7,7 @@ https://www.vagrantup.com/downloads.html
 
 2. Install vbguest plugin
 
-$ https://www.vagrantup.com/downloads.html
+$ vagrant plugin install vagrant-vbguest
 
 3. Build & run the environment
 
