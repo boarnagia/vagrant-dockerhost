@@ -1,19 +1,19 @@
-# Vagrant configuration for docker-compose host
+# docker-compose 用の Vagrant 設定ファイル
 
-## How to setup
+## セットアップ方法
 
-1. Install or upgrade Vagrant into latest
+1. Vagrantをインストール、または最新にアップデートしてください
 
-    Download here: https://www.vagrantup.com/downloads.html
+    ダウンロードはこちらから: https://www.vagrantup.com/downloads.html
 
-2. Install vbguest plugin if you didn't install
+2. vbguestプラグインを入れていないなら、インストールしてください
 
     On your console:
     ```
     local# vagrant plugin install vagrant-vbguest
     ```
 
-3. Finally, clone and run Vagrant environment
+3. 最後に、Vagrant の設定ファイルをクローンし、環境を立ち上げてください
 
     ```
     local# git clone https://github.com/boarnagia/vagrant-dockerhost.git dockerhost
@@ -21,9 +21,9 @@
     local# vagrant up
     ```
 
-## Test your environment availability
+## 環境が動くかを確かめてください
 
-1. Start docker-compose sample
+1. docker-compose のサンプルファイルを実行します
 
     ```
     local# vagrant ssh
@@ -31,9 +31,9 @@
     vm# docker-compose up -d
     ```
 
-2. Check that the server is running
+2. サーバが動いているかを確認します
 
-    1. Check status with docker-compose
+    1. docker-compose で動作状況を確認します
 
         On your console:
         ```
@@ -43,20 +43,20 @@
         sample-web   nginx -g daemon off;   Up      443/tcp, 0.0.0.0:80->80/tcp
         ```
 
-        It's running correctly if you saw state "Up" in the result.
+        State が "Up" になっている場合、正常に起動しています。
 
-    2. Check web server accessbility with your browser
+    2. Webサーバにアクセスできるかを確認します
 
-        Open following URLs with your browser:
+        以下のURLがブラウザから開けるかを確認してください
 
         1. http://192.168.33.10/
         2. http://localhost:8080/
         3. http://(your local machine IP addr):8080/
 
-        It's running correctly and access settins is normal if you saw this image:
+        以下の画面が確認できたら、Webサーバは正常に起動していて、アクセスを正常にできる状態になっています。
         ![Welcome message](https://assets.wp.nginx.com/wp-content/uploads/2014/01/welcome-screen-e1450116630667.png)
 
-3. VM host environment information
+3. VMホスト環境情報
 
 ```
 Mac version 10.11.6
@@ -73,4 +73,5 @@ Windows 10 Home + cygwin
     vagrant --version
         Vagrant 1.8.5
 ```
+
 vi: set fenc=utf-8 :
