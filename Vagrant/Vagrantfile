@@ -1,0 +1,80 @@
+# vi: set ft=ruby sts=2 sw=2 ts=2 :
+
+# All Vagrant configuration is done below. The "2" in Vagrant.configure
+# configures the configuration version (we support older styles for
+# backwards compatibility). Please don't change it unless you know what
+# you're doing.
+#
+# see https://www.vagrantup.com/docs/vagrantfile/
+Vagrant.configure("2") do |config|
+  config.vm.box = "centos/7"
+
+  ## Network settins
+  # config.vm.network "public_network"
+  config.vm.network "private_network", ip: "192.168.33.10"
+  config.vm.network "forwarded_port", guest: 80, host: 8080
+  config.vm.network "forwarded_port", guest: 443, host: 8083
+  config.vm.hostname = 'docker-host'
+
+  ## Sharing folder settings
+  config.vm.synced_folder "../data", "/vagrant_data", create: true, mount_options: ['dmode=777','fmode=777']
+
+  ## VirtualBox specific settings
+  config.vm.provider "virtualbox" do |vb|
+    vb.name   = "docker_host"
+    vb.memory = "2048"
+
+    # If you want to add extra-disks automaticaly, followings may be helpful.
+    # http://askubuntu.com/questions/317338/how-can-i-increase-disk-size-on-a-vagrant-vm
+    # https://www.vagrantup.com/docs/virtualbox/configuration.html
+  end
+
+  # Enable provisioning with a shell script. Additional provisioners such as
+  # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
+  # documentation for more information about their specific syntax and use.
+  config.vm.provision "shell", inline: <<-SHELL
+    # Set timezone
+    timedatectl set-timezone Asia/Tokyo
+
+    # Add yum repository of docker
+    tgt=/etc/yum.repos.d/docker.repo
+    if [ ! -f $tgt ];
+    then
+      echo '[dockerrepo]'                 > $tgt
+      echo 'name=Docker Repository'       >> $tgt
+      echo 'baseurl=https://yum.dockerproject.org/repo/main/centos/7/' \
+                                          >> $tgt
+      echo 'enabled=1'                    >> $tgt
+      echo 'gpgcheck=1'                   >> $tgt
+      echo 'gpgkey=https://yum.dockerproject.org/gpg' \
+                                          >> $tgt
+    fi
+
+    # Update and install useful tools
+    yum update -y
+    yum install -y epel-release vim git htop tree wget ntpdate
+
+    # Install docker tools
+    yum install -y docker-engine python-pip
+    pip install -U pip
+    pip install docker-compose
+    pip install -U docker-compose
+
+    # It gets vagrant user to be able to operate docker without sudo.
+    usermod -g docker vagrant
+
+    # Start docker service
+    systemctl start docker
+    systemctl enable docker
+
+    # Make a directory for docker volumes
+    # Some tools; like mariadb, require natural linux directories,
+    # so this directory is used for those tools.
+    tgt=/docker-volumes
+    if [ ! -d $tgt ];
+    then
+      mkdir $tgt
+      chown vagrant:docker $tgt
+    fi
+  SHELL
+end

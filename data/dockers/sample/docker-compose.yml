@@ -1,0 +1,9 @@
+version: '2'
+
+services:
+  web:
+    image: nginx:stable-alpine
+    hostname: localhost
+    container_name: sample-web
+    ports:
+      - "80:80"
